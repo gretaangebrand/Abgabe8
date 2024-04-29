@@ -1,4 +1,5 @@
 import json
+import requests
 from datetime import datetime
 
 class Person():
@@ -74,3 +75,31 @@ examiner = Examiner("Maria", "Musterfrau", "123456")
 # Speichere die Personen in JSON-Dateien
 subject.save("subject.json")
 examiner.save("examiner.json")
+
+# Senden einer GET-Anfrage an die Webadresse
+response = requests.get(url= 'http://127.0.0.1:5000/')
+
+# Überprüfen der Antwort
+if response.status_code == 200:
+    print("Erfolgreiche Verbindung zur Webadresse")
+else:
+    print("Fehler beim Verbinden zur Webadresse")
+
+
+json_str = """{
+  "contact": {
+      "id": "1",
+      "firstName": "Julian",
+      "lastName": "Huber"
+    }
+}"""
+
+# Wir können json.loads verwenden, um die JSON-Zeichenfolge in ein Python-Objekt zu konvertieren
+json_obj = json.loads(json_str)
+
+# Jetzt haben wir ein Python-Objekt, das dem JSON-Objekt entspricht
+print(json_obj)
+
+response = requests.post(url = 'http://127.0.0.1:5000/', data = json_str)
+
+response.text
