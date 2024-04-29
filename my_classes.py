@@ -40,6 +40,21 @@ class Person():
             return max_hr_bpm
         else:
             return None
+        
+    def put(self, url):
+        response = requests.put(url, json=self.__dict__)
+        return response
+    
+# Senden einer GET-Anfrage an die Webadresse
+response = requests.get(url= 'http://127.0.0.1:5000/')
+
+my_data = """{
+    "contact": {
+    "id": "1",
+    "firstName": "Julian",
+    "lastName": "Huber"
+    }
+  }"""
 
 class Subject(Person):
     def __init__(self, first_name, last_name, birthdate, sex):
@@ -76,30 +91,5 @@ examiner = Examiner("Maria", "Musterfrau", "123456")
 subject.save("subject.json")
 examiner.save("examiner.json")
 
-# Senden einer GET-Anfrage an die Webadresse
-response = requests.get(url= 'http://127.0.0.1:5000/')
-
-# Überprüfen der Antwort
-if response.status_code == 200:
-    print("Erfolgreiche Verbindung zur Webadresse")
-else:
-    print("Fehler beim Verbinden zur Webadresse")
 
 
-json_str = """{
-  "contact": {
-      "id": "1",
-      "firstName": "Julian",
-      "lastName": "Huber"
-    }
-}"""
-
-# Wir können json.loads verwenden, um die JSON-Zeichenfolge in ein Python-Objekt zu konvertieren
-json_obj = json.loads(json_str)
-
-# Jetzt haben wir ein Python-Objekt, das dem JSON-Objekt entspricht
-print(json_obj)
-
-response = requests.post(url = 'http://127.0.0.1:5000/', data = json_str)
-
-response.text
