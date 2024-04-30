@@ -1,13 +1,14 @@
 import requests
 import json
 
+## Creata a new person
 # Define the URL of the API
-url = "http://localhost:5000/"
+url = "http://127.0.0.1:5000/person/"
 
 # Define the data you want to send
+
 data = {
-    "name": "Frankie",
-    "email": "frankie@mail.at"
+    "name": "Testname2"
 }
 
 # Convert the data to JSON format

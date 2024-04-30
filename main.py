@@ -5,60 +5,73 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
-def query_records():
-    name = request.args.get('name')
-    print(name)
-    with open('data.txt', 'r') as f:
+# GET all persons
+@app.route('/person/', methods=['GET'])
+def get_persons():
+    with open('data.json', 'r') as f:
         data = f.read()
-        records = json.loads(data)
-        for record in records:
-            if record['name'] == name:
-                return jsonify(record)
-        return jsonify({'error': 'data not found'})
+        return data
 
-@app.route('/', methods=['PUT'])
-def create_record():
+
+# POST (create a new person)
+@app.route('/person/', methods=['POST'])
+def create_person():
     record = json.loads(request.data)
-    with open('data.txt', 'r') as f:
+    with open('data.json', 'r') as f:
         data = f.read()
     if not data:
         records = [record]
     else:
         records = json.loads(data)
         records.append(record)
-    with open('data.txt', 'w') as f:
+    with open('data.json', 'w') as f:
         f.write(json.dumps(records, indent=2))
     return jsonify(record)
 
-@app.route('/', methods=['POST'])
-def update_record():
-    record = json.loads(request.data)
-    new_records = []
-    with open('data.txt', 'r') as f:
+# GET a person by name
+@app.route('/person/<name>', methods=['GET'])
+def get_person(name):
+
+    with open('data.json', 'r') as f:
         data = f.read()
         records = json.loads(data)
-    for r in records:
-        if r['name'] == record['name']:
-            r['email'] = record['email']
-        new_records.append(r)
-    with open('data.txt', 'w') as f:
-        f.write(json.dumps(new_records, indent=2))
-    return jsonify(record)
+        for record in records:
+            if record['name'] == name:
+                return jsonify(record)
+        return jsonify({'error': 'data not found'})
     
-@app.route('/', methods=['DELETE'])
-def delete_record():
+# PUT (update a person)
+@app.route('/person/<name>', methods=['PUT'])
+
+def update_person(name):
     record = json.loads(request.data)
-    new_records = []
-    with open('data.txt', 'r') as f:
+    with open('data.json', 'r') as f:
         data = f.read()
         records = json.loads(data)
-        for r in records:
-            if r['name'] == record['name']:
-                continue
-            new_records.append(r)
-    with open('data.txt', 'w') as f:
-        f.write(json.dumps(new_records, indent=2))
-    return jsonify(record)
+        for i in range(len(records)):
+            if records[i]['name'] == name:
+                records[i] = record
+                with open('data.json', 'w') as f:
+                    f.write(json.dumps(records, indent=2))
+                return jsonify(record)
+        return jsonify({'error': 'data not found'})
+
+# DELETE a person
+@app.route('/person/<name>', methods=['DELETE'])
+
+def delete_person(name):
+
+    with open('data.json', 'r') as f:
+        data = f.read()
+        records = json.loads(data)
+        for i in range(len(records)):
+            if records[i]['name'] == name:
+                record = records.pop(i)
+                with open('data.json', 'w') as f:
+                    f.write(json.dumps(records, indent=2))
+                record["deleted"] = "True"
+                return jsonify(record)
+        return jsonify({'error': 'data not found'})
+
 
 app.run(debug=True)
