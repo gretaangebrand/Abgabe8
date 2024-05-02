@@ -3,7 +3,7 @@ import requests
 from datetime import datetime
 
 class Person():
-    def __init__(self, first_name, last_name, birthdate=None, sex=None):
+    def __init__(self, first_name, last_name=None, birthdate=None, sex=None):
         self.first_name = first_name
         self.last_name = last_name
         self.__birthdate = birthdate  # Geburtsdatum als privates Attribut
@@ -40,10 +40,13 @@ class Person():
             return max_hr_bpm
         else:
             return None
-
+    
 class Subject(Person):
-    def __init__(self, first_name, last_name, birthdate, sex, email=None):
-        super().__init__(first_name, last_name, birthdate, sex, email)
+    def __init__(self, first_name, last_name, birthdate, sex):
+        super().__init__(first_name, last_name, birthdate, sex)
+
+    def email(self):
+        return f"{self.first_name.lower()}@example.com"
 
 class Examiner(Person):
     def __init__(self, first_name, last_name, ID):
