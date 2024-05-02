@@ -56,13 +56,15 @@ class Examiner(Person):
         with open(filename, 'w') as file:
             json.dump(data, file)
 
-# Senden einer GET-Anfrage an die Webadresse
+# GET-Anfrage an Webadresse senden
     response = requests.get(url= 'http://127.0.0.1:5000/')
 
+    # POST-Anfrage an Webadresse senden und in json umformatieren
     def put(self, url):
         response = requests.put(url, json=self.__dict__)
         return response
 
+    # Funktion zum Aktualisieren der E-Mail-Adresse
     def update_email(self):
         # Annahme: Ein Subject mit dem gleichen Vornamen wurde zuvor mit der Methode put() angelegt
         # Führe einen REST-POST-Befehl aus, um die E-Mail-Adresse auf dem Server zu aktualisieren
@@ -78,7 +80,7 @@ class Examiner(Person):
         else:
             print("Fehler beim Aktualisieren der E-Mail-Adresse")
 
-# Beispiel-Nutzung:
+# Beispiel zur Nutzung der update_email-Methode:
 subject = Subject("Elisabeth", "lisi@example.com")
 subject.update_email()
 
@@ -101,6 +103,3 @@ examiner = Examiner("Maria", "Musterfrau", "123456")
 # Speichere die Personen in JSON-Dateien
 subject.save("subject.json")
 examiner.save("examiner.json")
-
-
-

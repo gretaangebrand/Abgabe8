@@ -8,7 +8,7 @@ url = "http://127.0.0.1:5000/person/"
 # Define the data you want to send
 
 data = {
-    "name": "Testname2"
+    "name": "Lisi"
 }
 
 # Convert the data to JSON format
