@@ -7,10 +7,11 @@ url = "http://127.0.0.1:5000/person/Testname2"
 
 # Define the data you want to send
 data = {
-    "name": "Testname2",
-    "email": "TestName2@mail.at",
+    "name": "Elisabeth",
+    "email": "elisabeth.krepper@gmail.com",
     "age" : 20
 }
+
 
 # Convert the data to JSON format
 data_json = json.dumps(data)
