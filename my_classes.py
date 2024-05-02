@@ -40,25 +40,10 @@ class Person():
             return max_hr_bpm
         else:
             return None
-  
-# Senden einer GET-Anfrage an die Webadresse
-    response = requests.get(url= 'http://127.0.0.1:5000/')
-
-    def put(self, url):
-        response = requests.put(url, json=self.__dict__)
-        return response
-
-    my_data = """{
-        "contact": {
-        "id": "1",
-        "firstName": "Julian",
-        "lastName": "Huber"
-        }
-    }"""
 
 class Subject(Person):
-    def __init__(self, first_name, last_name, birthdate, sex):
-        super().__init__(first_name, last_name, birthdate, sex)
+    def __init__(self, first_name, last_name, birthdate, sex, email=None):
+        super().__init__(first_name, last_name, birthdate, sex, email)
 
 class Examiner(Person):
     def __init__(self, first_name, last_name, ID):
@@ -71,14 +56,21 @@ class Examiner(Person):
         with open(filename, 'w') as file:
             json.dump(data, file)
 
+# Senden einer GET-Anfrage an die Webadresse
+    response = requests.get(url= 'http://127.0.0.1:5000/')
+
+    def put(self, url):
+        response = requests.put(url, json=self.__dict__)
+        return response
+
     def update_email(self):
         # Annahme: Ein Subject mit dem gleichen Vornamen wurde zuvor mit der Methode put() angelegt
         # Führe einen REST-POST-Befehl aus, um die E-Mail-Adresse auf dem Server zu aktualisieren
         # Verwende dazu die URL und die JSON-Daten entsprechend der API des Servers
-        url = "http://127.0.0.1:5000/"  # Beispiel-URL
+        url = "http://127.0.0.1:5000/"
         data = {
             'first_name': self.first_name,
-            'email': self.email
+            'update_email': self.email
         }
         response = requests.post(url, json=data)
         if response.status_code == 200:
