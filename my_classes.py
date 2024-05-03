@@ -40,24 +40,27 @@ class Person():
             return max_hr_bpm
         else:
             return None
-    
-class Subject(Person):
-    def __init__(self, first_name, last_name, birthdate, sex):
-        super().__init__(first_name, last_name, birthdate, sex)
 
-    def email(self):
-        return f"{self.first_name.lower()}@example.com"
+#als 1. Argument der Methode
+@classmethod
+def create_person(cls, first_name):
+    import json
 
-class Examiner(Person):
-    def __init__(self, first_name, last_name, ID):
-        super().__init__(first_name, last_name)
-        self.ID = ID
+    def add_name_to_json(filename, new_name):
+        try:
+            # Versuche, die vorhandenen Daten aus der JSON-Datei zu lesen
+            with open(filename, 'r') as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            # Wenn die Datei nicht vorhanden ist, lege eine leere Liste an
+            data = []
 
-    # Überschreibe die save-Methode, um nur öffentliche Attribute zu speichern
-    def save(self, filename):
-        data = {"first_name": self.first_name, "last_name": self.last_name, "ID": self.ID}
+        # Füge den neuen Namen zur Liste hinzu
+        data.append({"name": new_name})
+
+        # Schreibe die aktualisierten Daten zurück in die JSON-Datei
         with open(filename, 'w') as file:
-            json.dump(data, file)
+            json.dump(data, file, indent=2)
 
 # GET-Anfrage an Webadresse senden
     response = requests.get(url= 'http://127.0.0.1:5000/')
@@ -72,7 +75,7 @@ class Examiner(Person):
         # Annahme: Ein Subject mit dem gleichen Vornamen wurde zuvor mit der Methode put() angelegt
         # Führe einen REST-POST-Befehl aus, um die E-Mail-Adresse auf dem Server zu aktualisieren
         # Verwende dazu die URL und die JSON-Daten entsprechend der API des Servers
-        url = "http://127.0.0.1:5000/"
+        url = "http://127.0.0.1:5000/person"
         data = {
             'first_name': self.first_name,
             'update_email': self.email
@@ -83,9 +86,25 @@ class Examiner(Person):
         else:
             print("Fehler beim Aktualisieren der E-Mail-Adresse")
 
-# Beispiel zur Nutzung der update_email-Methode:
-subject = Subject("Elisabeth", "lisi@example.com")
-subject.update_email()
+    
+class Subject(Person):
+    def __init__(self, first_name, last_name=None, birthdate=None, sex=None):
+        super().__init__(first_name, last_name, birthdate, sex)
+        self.email = None
+        # Beispiel zur Nutzung der update_email-Methode:
+        subject = Subject("Michael", "jackson@example.com")
+        subject.update_email()
+
+class Examiner(Person):
+    def __init__(self, first_name, last_name, ID):
+        super().__init__(first_name, last_name)
+        self.ID = ID
+
+    # Überschreibe die save-Methode, um nur öffentliche Attribute zu speichern
+    def save(self, filename):
+        data = {"first_name": self.first_name, "last_name": self.last_name, "ID": self.ID}
+        with open(filename, 'w') as file:
+            json.dump(data, file)
 
 class Experiment():
     def __init__(self, experiment_name, date, supervisor, subject):
@@ -99,10 +118,10 @@ class Experiment():
             json.dump(self.__dict__, file)
 
 # Beispiel einer Person
-subject = Subject("Max", "Mustermann", "1990-01-01", "male")
+#subject = Subject("Max", "Mustermann", "1990-01-01", "male")
 
 examiner = Examiner("Maria", "Musterfrau", "123456")
 
 # Speichere die Personen in JSON-Dateien
-subject.save("subject.json")
+Subject.save("subject.json")
 examiner.save("examiner.json")
